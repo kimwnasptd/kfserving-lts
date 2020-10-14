@@ -16,8 +16,9 @@ package pod
 import (
 	"encoding/json"
 	"fmt"
-	"k8s.io/apimachinery/pkg/api/resource"
 	"strings"
+
+	"k8s.io/apimachinery/pkg/api/resource"
 
 	"github.com/kubeflow/kfserving/pkg/constants"
 	"github.com/kubeflow/kfserving/pkg/credentials"
@@ -144,6 +145,9 @@ func (mi *StorageInitializerInjector) InjectStorageInitializer(pod *v1.Pod) erro
 			Name:      PvcSourceMountName,
 			MountPath: pvcMountPath,
 			ReadOnly:  true,
+		}
+		if skipStorageInitializer {
+			pvcSourceVolumeMount.ReadOnly = false
 		}
 		storageInitializerMounts = append(storageInitializerMounts, pvcSourceVolumeMount)
 
