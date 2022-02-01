@@ -21,7 +21,7 @@ RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda$CONDA_PYTHON_VERS
     rm -rf /var/lib/apt/lists/*
 
 RUN conda install -y python=$PYTHON_VERSION && \
-    conda install -y pytorch==$PYTORCH_VERSION torchvision pillow==6.2.0 cudatoolkit=10.0 -c pytorch && \
+    conda install -y pytorch==$PYTORCH_VERSION torchvision cudatoolkit=10.0 -c pytorch && \
     conda install -y h5py scikit-learn matplotlib seaborn \
     pandas mkl-service cython && \
     conda clean -tipsy
@@ -52,7 +52,7 @@ COPY --from=build /opt/conda/. $CONDA_DIR
 COPY pytorchserver pytorchserver
 COPY kfserving kfserving
 
-RUN pip install --upgrade pip && pip install -e ./kfserving
+RUN pip install --upgrade pip "pillow>=9" && pip install -e ./kfserving
 RUN pip install -e ./pytorchserver
 ENTRYPOINT ["python", "-m", "pytorchserver"]
 
